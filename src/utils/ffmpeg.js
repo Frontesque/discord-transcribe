@@ -4,7 +4,7 @@ async function pcm_to_wav(source) {
     return new Promise(async (resolve, reject) => {
         let output = source.replace(".pcm", ".wav");
         
-        console.log(`[FFMPEG] Converting: "${source}  ->  ${output}"`);
+        // console.log(`[FFMPEG] Converting: "${source}  ->  ${output}"`);
         const cmd = spawn('ffmpeg', [
             // --- Input Settings (Telling FFmpeg what the .pcm file IS) ---
             "-f", "s16le",    // Raw PCM format
