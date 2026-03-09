@@ -4,6 +4,9 @@ const fs = require('fs');
 const path = require('path');
 const transcribe = require("../utils/transcribe");
 
+// Keep track of active recordings outside the event listener
+const activeRecordings = new Set();
+
 module.exports = (client) => {
     client.on('messageCreate', async (message) => {
         // Command: !join
@@ -30,6 +33,11 @@ module.exports = (client) => {
             // 3. Listen for speaking events
             connection.playOpusPacket(Buffer.from([0xF8, 0xFF, 0xFE]));
             connection.receiver.speaking.on('start', (userId) => {
+
+                
+                if (activeRecordings.has(userId)) return; // 1. CHECK IF WE ARE ALREADY RECORDING THIS USER
+                activeRecordings.add(userId); // 2. MARK AS RECORDING
+
                 const member = message.guild.members.cache.get(userId);
                 const username = member ? member.user.username : "Unknown User";
                 console.log(`Recording: ${username} (${userId})`);
@@ -38,7 +46,7 @@ module.exports = (client) => {
                 const opusStream = connection.receiver.subscribe(userId, {
                     end: {
                         behavior: EndBehaviorType.AfterSilence,
-                        duration: 5000, // End stream after 1 second of silence
+                        duration: 1000, // End stream after 1 second of silence
                     },
                 });
     
@@ -56,6 +64,7 @@ module.exports = (client) => {
     
                 opusStream.on('end', () => {
                     console.log(`Stopped recording: ${username} (${userId})`);
+                    activeRecordings.delete(userId);
                     writeStream.end();
                     transcribe(userId, username, filename);
                 });
