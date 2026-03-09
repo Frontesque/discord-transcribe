@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo dnf install -y git @development-tools cmake gcc gcc-c++ nodejs
+sudo dnf install -y git @development-tools cmake gcc gcc-c++ nodejs opus-devel
 
 mkdir -p bin
 cd bin
