@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo dnf install -y git @development-tools cmake gcc
+sudo dnf install -y git @development-tools cmake gcc gcc-c++ nodejs
 
 mkdir -p bin
 cd bin
