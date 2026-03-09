@@ -17,6 +17,14 @@ module.exports = async (userid, username, filePath) => {
 
     if (transcription !== "") {
         console.log(`[${username}] ${transcription}`);
+        const now = new Date();
+        const hhmmss = now.toLocaleTimeString('en-GB', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        });
+        fs.appendFileSync('transcript.txt', `(${hhmmss}) [${username}] ${transcription}\n`);
     }
 
     fs.unlinkSync(wavFile); // Clean up the WAV file after transcription
