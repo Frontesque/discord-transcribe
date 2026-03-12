@@ -1,5 +1,5 @@
 module.exports = (client) => {
     client.on('clientReady', () => {
-        console.log(`Logged in as ${client.user.tag}!`);
+        console.log(`[SCRIPTY:INIT]    Logged in as ${client.user.tag}!`);
     });
 }

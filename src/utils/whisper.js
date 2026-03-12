@@ -1,10 +1,12 @@
 const { spawn } = require('child_process');
 
+const model = `ggml-${process.env.SCRIPTY_MODEL}.bin`;
+
 async function transcribe(source) {
     return new Promise(async (resolve, reject) => {
         const cmd = spawn('./bin/whisper.cpp/build/bin/whisper-cli', [
             '-m',
-            './bin/whisper.cpp/models/ggml-base.en.bin',
+            './bin/whisper.cpp/models/'+model,
             '-f',
             source
         ]);
@@ -25,11 +27,17 @@ async function transcribe(source) {
         cmd.on('close', (code) => {
             if (code === 0) {
                 // Whisper often outputs extra newlines/spaces, so trim it
-                let transcription = "";
+                let transcription = [];
                 try {
-                    transcription = output.split("]   ")[1].trim();
-                } catch (e) {}
-                resolve(transcription);
+                    let chunks = output.trim().split("\n");
+                    for (const i in chunks) {
+                        transcription.push(chunks[i].split("]   ")[1]?.trim());
+                    }
+                } catch (e) {
+                    console.log("[SCRIPTY:WHISPER] Failed to parse Whisper output. Returning raw output.");
+                    transcription.push(output.trim());
+                }
+                resolve(transcription.join(" "));
             } else {
                 console.error("Whisper Error Output:", errorOutput);
                 reject(new Error(`Whisper process exited with code ${code}`));

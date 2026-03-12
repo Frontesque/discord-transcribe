@@ -2,13 +2,12 @@ const whisper = require('./whisper');
 const ffmpeg = require("./ffmpeg");
 const fs = require("fs");
 
-
 module.exports = async (userid, username, filePath) => {
     const wavFile = await ffmpeg.pcm_to_wav(filePath);
     fs.unlinkSync(filePath); // Clean up the PCM file after conversion
     
     if (!fs.existsSync(wavFile) || fs.statSync(wavFile).size < 1000) {
-        console.log(`[${username}] Audio file is too small or missing. Skipping.`);
+        console.log(`[SCRIPTY:WHISPER] ${username}'s audio file is too short. Skipping.`);
         fs.unlinkSync(wavFile);
         return;
     }
@@ -16,7 +15,7 @@ module.exports = async (userid, username, filePath) => {
     const transcription = await whisper.transcribe(wavFile);
 
     if (transcription !== "") {
-        console.log(`[${username}] ${transcription}`);
+        console.log(`[SCRIPTY:OUTPUT]  [${username}] ${transcription}`);
         const now = new Date();
         const hhmmss = now.toLocaleTimeString('en-GB', {
             hour: '2-digit',

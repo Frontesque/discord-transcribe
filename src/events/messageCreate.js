@@ -26,7 +26,7 @@ module.exports = (client) => {
             });
     
             connection.on(VoiceConnectionStatus.Ready, () => {
-                console.log('Connected to the voice channel!');
+                console.log('[SCRIPTY:DISCORD] Connected to the voice channel!');
                 message.reply('I am now listening...');
             });
     
@@ -40,13 +40,13 @@ module.exports = (client) => {
 
                 const member = message.guild.members.cache.get(userId);
                 const username = member ? member.user.username : "Unknown User";
-                console.log(`Recording: ${username} (${userId})`);
+                console.log(`[SCRIPTY:DISCORD] \x1b[90mRecording: ${username} (${userId})\x1b[0m`);
     
                 // Subscribe to the specific user's audio stream
                 const opusStream = connection.receiver.subscribe(userId, {
                     end: {
                         behavior: EndBehaviorType.AfterSilence,
-                        duration: 1000, // End stream after 1 second of silence
+                        duration: 500, // End stream after 0.5 second of silence
                     },
                 });
     
@@ -63,7 +63,7 @@ module.exports = (client) => {
                 pcmStream.pipe(writeStream);
     
                 opusStream.on('end', () => {
-                    console.log(`Stopped recording: ${username} (${userId})`);
+                    console.log(`[SCRIPTY:DISCORD] \x1b[90mStopped recording: ${username} (${userId})\x1b[0m`);
                     activeRecordings.delete(userId);
                     writeStream.end();
                     transcribe(userId, username, filename);
