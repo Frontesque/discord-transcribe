@@ -12,9 +12,6 @@ case "$MODEL_TO_DOWNLOAD" in tiny|tiny.en|tiny-q5_1|tiny.en-q5_1|tiny-q8_0|base|
         ;;
 esac
 
-echo -e "###########################################################################\n#                                                                         #\n#   STOP!                                                                 #\n#                                                                         #\n#   THIS EXECUTABLE IS PROPERTY OF DROP NOTIFIER L.L.C.                   #\n#                                                                         #\n#   IF YOU ARE NOT AUTHORIZED TO USE THIS EXECUTABLE, PLEASE QUIT NOW.    #\n#                                                                         #\n###########################################################################"
-sleep 5
-
 mkdir -p bin
 cd bin
 
